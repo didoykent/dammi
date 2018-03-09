@@ -37,7 +37,8 @@ export default class App extends Component {
       hasLoadedData: false,
       binanceRate:null,
       upbitRate: null,
-      usdkrRate: null,
+      usdkrRate: null
+
 
     }
     this.coinsPh = this.coinsPh.bind(this)
@@ -48,13 +49,17 @@ export default class App extends Component {
     this.getCoinsSellRate = this.getCoinsSellRate.bind(this)
     this.binance = this.binance.bind(this)
     this.getBURate = this.getBURate.bind(this)
+    this.getSURate = this.getSURate.bind(this)
+
+
   }
 
   componentWillMount() {
     setInterval(this.coinsPh, 1000)
     setInterval(this.coinsPlug, 1000)
     setInterval(this.conversion, 1000)
-  this.binance()
+    setInterval(this.binance, 1000)
+
   }
 
   hasLoaded() {
@@ -114,24 +119,37 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
   getCPDAXRate() {
     const vm = this
     const { currentKoreanRate, phpRate, krwRate } = vm.state
-    const result = (krwRate - (currentKoreanRate * phpRate)) / phpRate * currentKoreanRate
+    const result = (krwRate - (currentKoreanRate * phpRate)) / (phpRate * currentKoreanRate) * 100
     return result.toFixed(2)
   }
 
   getCoinsSellRate() {
     const vm = this
     const { currentKoreanRate, phpSellRate, krwRate } = vm.state
-    const result = ((phpSellRate * currentKoreanRate) - krwRate) / krwRate
+    const result = (((phpSellRate * currentKoreanRate) - krwRate) / krwRate) * 100
     return result.toFixed(2)
   }
 
   getBURate(){
     const vm = this
     const {usdkrRate, binanceRate, upbitRate } = vm.state
-    const result = (  (binanceRate * usdkrRate)  - upbitRate   ) / upbitRate * 100 
+    const result = ( upbitRate - (binanceRate * usdkrRate)) / (binanceRate * usdkrRate) * 100
     return result.toFixed(2)
 
   }
+
+  getSURate(){
+
+    const vm = this
+    const {usdkrRate, binanceRate, upbitRate } = vm.state
+    const result = (((usdkrRate * binanceRate) - upbitRate) / upbitRate) * 100
+    return result.toFixed(2)
+  }
+
+459004
+20.594
+9452728.376
+9536000
 
   render() {
     const vm = this
@@ -188,12 +206,20 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
             <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom:10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Coins.ph | Buy</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{phpRate}</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
@@ -202,12 +228,21 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
              <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom:10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>PHP to KRW</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{currentKoreanRate} KRW</Text>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
@@ -224,7 +259,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{krwRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate</Text>
                     </Col>
@@ -232,6 +267,15 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{this.getCPDAXRate()}%</Text>
                     </Col>
                   </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+
                 </View>
               </Col>
             </Row>
@@ -246,12 +290,20 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}> {phpSellRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style= {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate </Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{this.getCoinsSellRate()}%</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
@@ -263,12 +315,28 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
             <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>Binance | Buy</Text>
+                      <Text style={styles.labelText}>Binance | Buy | Sell</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{binanceRate}</Text>
+                    </Col>
+                  </Row>
+                  <Row style= {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Rate </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{this.getBURate()}%</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
@@ -279,12 +347,20 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
              <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>USD to KRW</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{usdkrRate} KRW</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
@@ -297,18 +373,26 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                 <View style={styles.labelValueContainer}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>Upbit | Buy</Text>
+                      <Text style={styles.labelText}>Upbit | Sell | Buy</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}> {upbitRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate </Text>
                     </Col>
                     <Col style={styles.alignRight}>
-                      <Text style={styles.valueText}>{this.getBURate()}%</Text>
+                      <Text style={styles.valueText}>{this.getSURate()}%</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
                     </Col>
                   </Row>
                 </View>
