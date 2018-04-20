@@ -24,6 +24,7 @@ import {
 import { PacmanIndicator } from 'react-native-indicators';
 import { Col, Row, Grid } from "react-native-easy-grid";
 
+
 import axios from 'axios'
 export default class App extends Component {
   constructor(props) {
@@ -37,30 +38,35 @@ export default class App extends Component {
       hasLoadedData: false,
       binanceRate:null,
       upbitRate: null,
-      usdkrRate: null,
+      binanceEth:null,
+      upbitEth:null,
+      usdkrRate: null
+
 
     }
     this.coinsPh = this.coinsPh.bind(this)
-    this.coinsPlug = this.coinsPlug.bind(this)
     this.conversion = this.conversion.bind(this)
     this.hasLoaded = this.hasLoaded.bind(this)
     this.getCPDAXRate = this.getCPDAXRate.bind(this)
     this.getCoinsSellRate = this.getCoinsSellRate.bind(this)
     this.binance = this.binance.bind(this)
     this.getBURate = this.getBURate.bind(this)
+    this.getSURate = this.getSURate.bind(this)
+
+
   }
 
   componentWillMount() {
     setInterval(this.coinsPh, 1000)
-    setInterval(this.coinsPlug, 1000)
     setInterval(this.conversion, 1000)
-  this.binance()
+    setInterval(this.binance, 1000)
+
   }
 
   hasLoaded() {
     const vm = this
-    const { currentKoreanRate, krwRate, phpRate, phpSellRate, binanceRate, upbitRate, usdkrRate } = vm.state
-    const hasData = currentKoreanRate !== null && krwRate !== null && phpRate !== null && phpSellRate !== null && binanceRate !== null  && upbitRate !== null && usdkrRate !==null
+    const { currentKoreanRate, phpRate, phpSellRate, binanceRate, upbitRate, binanceEth, upbitEth, usdkrRate } = vm.state
+    const hasData = currentKoreanRate !== null  && phpRate !== null && phpSellRate !== null && binanceRate !== null  && upbitRate !== null && usdkrRate !==null && binanceEth !==null && upbitEth !==null
     return hasData
   }
 
@@ -81,8 +87,8 @@ var vm = this
 
 try{
 const result = await axios.get('https://rocky-atoll-77281.herokuapp.com/api/binanceCoinRate')
-const{binanceCoinRate, upbitCoinRate, usdTokrw} = result.data
-vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: usdTokrw })
+const{binanceCoinRate, upbitCoinRate, usdTokrw, binanceEthRate, upbitEthRate} = result.data
+vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth: binanceEthRate, upbitEth: upbitEthRate, usdkrRate: usdTokrw })
 
 }catch(e){
 
@@ -113,29 +119,55 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
 
   getCPDAXRate() {
     const vm = this
-    const { currentKoreanRate, phpRate, krwRate } = vm.state
-    const result = (krwRate - (currentKoreanRate * phpRate)) / phpRate * currentKoreanRate
+    const { currentKoreanRate, phpRate, upbitRate } = vm.state
+    const result = (upbitRate - (currentKoreanRate * phpRate)) / (phpRate * currentKoreanRate) * 100
     return result.toFixed(2)
   }
 
   getCoinsSellRate() {
     const vm = this
-    const { currentKoreanRate, phpSellRate, krwRate } = vm.state
-    const result = ((phpSellRate * currentKoreanRate) - krwRate) / krwRate
+    const { currentKoreanRate, phpSellRate, upbitRate } = vm.state
+    const result = (((phpSellRate * currentKoreanRate) - upbitRate) / upbitRate) * 100
     return result.toFixed(2)
   }
 
   getBURate(){
     const vm = this
     const {usdkrRate, binanceRate, upbitRate } = vm.state
-    const result = (  (binanceRate * usdkrRate)  - upbitRate   ) / upbitRate * 100 
+    const result = ( upbitRate - (binanceRate * usdkrRate)) / (binanceRate * usdkrRate) * 100
     return result.toFixed(2)
 
   }
 
+  getSURate(){
+
+    const vm = this
+    const {usdkrRate, binanceRate, upbitRate } = vm.state
+    const result = (((usdkrRate * binanceRate) - upbitRate) / upbitRate) * 100
+    return result.toFixed(2)
+  }
+
+  getBUEthRate(){
+    const vm = this
+    const {usdkrRate, binanceEth, upbitEth } = vm.state
+    const result = ( upbitEth - (binanceEth * usdkrRate)) / (binanceEth * usdkrRate) * 100
+    return result.toFixed(2)
+
+  }
+
+  getSUEthRate(){
+
+    const vm = this
+    const {usdkrRate, binanceEth, upbitEth } = vm.state
+    const result = (((usdkrRate * binanceEth) - upbitEth) / upbitEth) * 100
+    return result.toFixed(2)
+  }
+
+
+
   render() {
     const vm = this
-    const { phpRate, phpSellRate, krwRate, currentKoreanRate, hasLoadedData, binanceRate , upbitRate, usdkrRate} = vm.state
+    const { phpRate, phpSellRate, currentKoreanRate, hasLoadedData, binanceRate , upbitRate, upbitEth, binanceEth, usdkrRate} = vm.state
     const styles = StyleSheet.create({
       content: {
         flex: 1,
@@ -172,7 +204,40 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
       },
       alimRight: {
         alignItems: 'flex-end',
-      }
+      },
+
+      navBar: {
+    height: 50,
+
+    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    elevation: 3,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+
+  },
+  container: {
+
+    flex: 1
+  },
+
+  body:{
+
+    flex: 1
+  },
+  dateFont:{
+    fontSize: 25,
+    color: 'white',
+    fontWeight: 'bold',
+
+  }
+
+
+
+
+
     });
     if (!vm.hasLoaded()) {
       return <View style={{ height: '100%', flex:1, flexDirection:'row', alignItems:'center', justifyContent:'center' }}>
@@ -181,14 +246,29 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
         </View>
     }
     return (
-      <View style={{ height: '100%', flex:1, flexDirection:'row', alignItems:'center', justifyContent:'center' }}>
+      <View style = {styles.container}>
+
+
+    <View style = {styles.navBar}>
+
+<Text style = {styles.dateFont}>  {new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+    </View>
+
+    <View style = {styles.body}>
+
         <Image source={require('./backgrounds.jpg')} style={{ resizeMode: 'cover', width: '100%', height: '100%', position: 'absolute' }} />
+
+
+
         <ScrollView>
+
           <Grid>
-            <Row>
+
+
+            <Row style>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom:10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Coins.ph | Buy</Text>
                     </Col>
@@ -196,13 +276,14 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{phpRate}</Text>
                     </Col>
                   </Row>
+
                 </View>
               </Col>
             </Row>
              <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom:10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>PHP to KRW</Text>
                     </Col>
@@ -210,6 +291,8 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{currentKoreanRate} KRW</Text>
                     </Col>
                   </Row>
+
+
                 </View>
               </Col>
             </Row>
@@ -218,13 +301,13 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                 <View style={styles.labelValueContainer}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>CPDAX</Text>
+                      <Text style={styles.labelText}>Upbit </Text>
                     </Col>
                     <Col style={styles.alignRight}>
-                      <Text style={styles.valueText}>{krwRate}</Text>
+                      <Text style={styles.valueText}>{upbitRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate</Text>
                     </Col>
@@ -232,6 +315,8 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{this.getCPDAXRate()}%</Text>
                     </Col>
                   </Row>
+
+
                 </View>
               </Col>
             </Row>
@@ -240,13 +325,13 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                 <View style={styles.labelValueContainer}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>Coins.ph | Sell</Text>
+                      <Text style={styles.labelText}>Coins.ph | Sell </Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}> {phpSellRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style= {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate </Text>
                     </Col>
@@ -254,6 +339,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{this.getCoinsSellRate()}%</Text>
                     </Col>
                   </Row>
+
                 </View>
               </Col>
             </Row>
@@ -263,14 +349,23 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
             <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>Binance | Buy</Text>
+                      <Text style={styles.labelText}>Binance | Buy | Sell</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{binanceRate}</Text>
                     </Col>
                   </Row>
+                  <Row style= {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Rate </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{this.getBURate()}%</Text>
+                    </Col>
+                  </Row>
+
                 </View>
               </Col>
             </Row>
@@ -279,7 +374,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
              <Row>
               <Col>
                 <View style={styles.labelValueContainer}>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>USD to KRW</Text>
                     </Col>
@@ -287,6 +382,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                       <Text style={styles.valueText}>{usdkrRate} KRW</Text>
                     </Col>
                   </Row>
+
                 </View>
               </Col>
             </Row>
@@ -297,18 +393,115 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
                 <View style={styles.labelValueContainer}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col style={styles.alignLeft}>
-                      <Text style={styles.labelText}>Upbit | Buy</Text>
+                      <Text style={styles.labelText}>Upbit | Sell | Buy</Text>
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}> {upbitRate}</Text>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style = {{marginBottom: 10}}>
                     <Col style={styles.alignLeft}>
                       <Text style={styles.labelText}>Rate </Text>
                     </Col>
                     <Col style={styles.alignRight}>
-                      <Text style={styles.valueText}>{this.getBURate()}%</Text>
+                      <Text style={styles.valueText}>{this.getSURate()}%</Text>
+                    </Col>
+                  </Row>
+                </View>
+              </Col>
+            </Row>
+
+
+            <Row>
+<Col>
+<View>
+
+
+
+
+  <Row style={{ marginBottom: 10 }}>
+    <Col>
+      <Text style={{  fontSize: 25,
+        color: 'white',
+        fontWeight: 'bold', textAlign: 'center', marginRight: 15}}>Ethereum</Text>
+
+        <Col style={{
+          borderBottomWidth: 5,
+          borderBottomColor: 'white',
+          width: 400
+        }}>
+
+        </Col>
+    </Col>
+
+  </Row>
+
+</View>
+</Col>
+
+            </Row>
+
+
+
+            <Row>
+              <Col>
+                <View style={styles.labelValueContainer}>
+                  <Row style = {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Binance | Buy | Sell</Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{binanceEth}</Text>
+                    </Col>
+                  </Row>
+                  <Row style= {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Rate </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{this.getBUEthRate()}%</Text>
+                    </Col>
+                  </Row>
+
+                </View>
+              </Col>
+            </Row>
+
+
+             <Row>
+              <Col>
+                <View style={styles.labelValueContainer}>
+                  <Row style = {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>USD to KRW</Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{usdkrRate} KRW</Text>
+                    </Col>
+                  </Row>
+
+                </View>
+              </Col>
+            </Row>
+
+
+            <Row>
+              <Col>
+                <View style={styles.labelValueContainer}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Upbit | Sell | Buy</Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{upbitEth}</Text>
+                    </Col>
+                  </Row>
+                  <Row style = {{marginBottom: 10}}>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Rate </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{this.getSUEthRate()}%</Text>
                     </Col>
                   </Row>
                 </View>
@@ -317,8 +510,11 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, usdkrRate: 
 
 
 
-          </Grid>
+
+      </Grid>
         </ScrollView>
+
+      </View>
       </View>
     )
   }

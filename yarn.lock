@@ -3630,6 +3630,10 @@ react-native-indicators@^0.12.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-navigation-bar@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-navigation-bar/-/react-native-navigation-bar-0.2.1.tgz#e25e585742124040ff069a69a4445be83de77000"
+
 react-native@0.53.3:
   version "0.53.3"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.53.3.tgz#930d1de5d68866f32a4b55112fc0228e29784e8f"
