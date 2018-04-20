@@ -38,8 +38,11 @@ export default class App extends Component {
       hasLoadedData: false,
       binanceRate:null,
       upbitRate: null,
+<<<<<<< HEAD
       binanceEth:null,
       upbitEth:null,
+=======
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
       usdkrRate: null
 
 
@@ -119,15 +122,25 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
 
   getCPDAXRate() {
     const vm = this
+<<<<<<< HEAD
     const { currentKoreanRate, phpRate, upbitRate } = vm.state
     const result = (upbitRate - (currentKoreanRate * phpRate)) / (phpRate * currentKoreanRate) * 100
+=======
+    const { currentKoreanRate, phpRate, krwRate } = vm.state
+    const result = (krwRate - (currentKoreanRate * phpRate)) / (phpRate * currentKoreanRate) * 100
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
     return result.toFixed(2)
   }
 
   getCoinsSellRate() {
     const vm = this
+<<<<<<< HEAD
     const { currentKoreanRate, phpSellRate, upbitRate } = vm.state
     const result = (((phpSellRate * currentKoreanRate) - upbitRate) / upbitRate) * 100
+=======
+    const { currentKoreanRate, phpSellRate, krwRate } = vm.state
+    const result = (((phpSellRate * currentKoreanRate) - krwRate) / krwRate) * 100
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
     return result.toFixed(2)
   }
 
@@ -135,6 +148,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
     const vm = this
     const {usdkrRate, binanceRate, upbitRate } = vm.state
     const result = ( upbitRate - (binanceRate * usdkrRate)) / (binanceRate * usdkrRate) * 100
+<<<<<<< HEAD
     return result.toFixed(2)
 
   }
@@ -151,10 +165,13 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
     const vm = this
     const {usdkrRate, binanceEth, upbitEth } = vm.state
     const result = ( upbitEth - (binanceEth * usdkrRate)) / (binanceEth * usdkrRate) * 100
+=======
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
     return result.toFixed(2)
 
   }
 
+<<<<<<< HEAD
   getSUEthRate(){
 
     const vm = this
@@ -164,6 +181,20 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
   }
 
 
+=======
+  getSURate(){
+
+    const vm = this
+    const {usdkrRate, binanceRate, upbitRate } = vm.state
+    const result = (((usdkrRate * binanceRate) - upbitRate) / upbitRate) * 100
+    return result.toFixed(2)
+  }
+
+459004
+20.594
+9452728.376
+9536000
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
 
   render() {
     const vm = this
@@ -276,7 +307,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{phpRate}</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                 </View>
               </Col>
             </Row>
@@ -292,7 +334,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                     </Col>
                   </Row>
 
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                 </View>
               </Col>
             </Row>
@@ -315,7 +368,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{this.getCPDAXRate()}%</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
 
                 </View>
               </Col>
@@ -339,7 +403,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{this.getCoinsSellRate()}%</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                 </View>
               </Col>
             </Row>
@@ -365,7 +440,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{this.getBURate()}%</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                 </View>
               </Col>
             </Row>
@@ -382,7 +468,18 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{usdkrRate} KRW</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
 
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+                    </Col>
+                  </Row>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                 </View>
               </Col>
             </Row>
@@ -407,6 +504,7 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                       <Text style={styles.valueText}>{this.getSURate()}%</Text>
                     </Col>
                   </Row>
+<<<<<<< HEAD
                 </View>
               </Col>
             </Row>
@@ -477,6 +575,14 @@ vm.setState({binanceRate: binanceCoinRate, upbitRate: upbitCoinRate, binanceEth:
                     </Col>
                     <Col style={styles.alignRight}>
                       <Text style={styles.valueText}>{usdkrRate} KRW</Text>
+=======
+                  <Row>
+                    <Col style={styles.alignLeft}>
+                      <Text style={styles.labelText}>Current Date </Text>
+                    </Col>
+                    <Col style={styles.alignRight}>
+                      <Text style={styles.valueText}>{new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"})}</Text>
+>>>>>>> 0f5f546d2ae908ecf8d44a9a1d2246a7b79bd243
                     </Col>
                   </Row>
 
